@@ -1,11 +1,13 @@
 'use strict';
 
+//Some useful global variables
 var main = document.getElementById('canvas');
 var brushColor = 'black';
 var erasing = false;
 var pixelCount = 0;
+var lastMove = {};
 
-//Canvas is laid out
+//Canvas function is laid out
 function createCanvas () {
   pixelCount = 0;
   for(var x = 0; x < 3200; x++){
@@ -45,8 +47,9 @@ function reset () {
   createCanvas();
 }
 
+//Adds row. Id's are sequenced from pixelCount
 function addRow () {
-  for(var x = 0; x < 80; x++) {
+  for(var x = 0; x < 400; x++) {
     var pixel = document.createElement('div');
     var newId = 'ID' + pixelCount;
     pixel.setAttribute('class', 'pixel');
@@ -57,16 +60,35 @@ function addRow () {
   }
 }
 
+//undo functionality
+//Painting adds the ID's of all the affected divs to the lastMove object. The undoLast function reverses those actions for all ID's in the object;
+
+function undoLast () {
+  for(var id in lastMove){
+    var toReset = document.getElementById(id);
+    toReset.style.backgroundColor = lastMove[id];
+    toReset.style.border = lastMove[id];
+  }
+}
+
 //main paint event listener
 main.addEventListener('mousedown' , function(event){
+  lastMove = {};
   var id = event.target.id;
+
+  lastMove[id] = document.getElementById(id).style.backgroundColor;
+
   paint(id);
   var drawing = true;
+
   //Listens for the id's of all the divs it rolls over
   main.addEventListener('mouseover', function(event) {
 
     if(drawing) {
       id = event.target.id;
+
+      lastMove[id] = document.getElementById(id).style.backgroundColor;
+
       paint(id);
     }
 
@@ -90,7 +112,7 @@ colors.addEventListener('click', function(event) {
     if(color === 'black'){
       button.style.color = 'white';
     }else{
-      button.style.color = 'black'
+      button.style.color = 'black';
     }
   }
 });
@@ -118,10 +140,10 @@ window.addEventListener('keypress', function(event){
 
   if(event.keyCode === 101){
     if(erasing){
-      eraseText.innerText = "Press 'e' to toggle erasing"
+      eraseText.innerText = "Press E to toggle eraser";
       erasing = false;
     }else{
-      eraseText.innerText = "Eraser active. Press 'e' to turn off";
+      eraseText.innerText = "Eraser active. Press E to turn off";
       erasing = true;
     }
   }
