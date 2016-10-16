@@ -1,18 +1,21 @@
 'use strict';
 
 var main = document.getElementById('canvas');
-var brushColor = 'red';
+var brushColor = 'black';
 var erasing = false;
+var pixelCount = 0;
 
 //Canvas is laid out
 function createCanvas () {
+  pixelCount = 0;
   for(var x = 0; x < 3200; x++){
     var pixel = document.createElement('div');
-    var newId = 'a' + x;
+    var newId = 'ID' + x;
     pixel.setAttribute('class', 'pixel');
     pixel.id = newId;
 
     main.appendChild(pixel);
+    pixelCount++;
   }
 }
 
@@ -22,7 +25,7 @@ createCanvas();
 //handles the 'painting' of divs
 function paint (id) {
   var toChange = document.getElementById(id);
-  if(id.startsWith('a')){
+  if(id.startsWith('ID')){
     if(erasing){
       toChange.style.backgroundColor = 'white';
       toChange.style.border = '1px solid gainsboro';
@@ -33,12 +36,25 @@ function paint (id) {
   }
 }
 
-//removes all the child nodes form the canvas
+//removes all the child nodes from the canvas
 function reset () {
   while(main.hasChildNodes()){
     main.removeChild(main.firstChild);
   }
+  //paints a new canvas
   createCanvas();
+}
+
+function addRow () {
+  for(var x = 0; x < 80; x++) {
+    var pixel = document.createElement('div');
+    var newId = 'ID' + pixelCount;
+    pixel.setAttribute('class', 'pixel');
+    pixel.id = newId;
+
+    main.appendChild(pixel);
+    pixelCount++;
+  }
 }
 
 //main paint event listener
