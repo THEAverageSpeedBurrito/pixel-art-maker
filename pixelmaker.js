@@ -102,18 +102,13 @@ main.addEventListener('mousedown' , function(event){
 
 //Color selection functionality
 var colors = document.getElementById('colors');
-var button = document.getElementById('currentColor');
+var border = document.getElementById('canvas');
 
 colors.addEventListener('click', function(event) {
   var color = event.target.id;
   if(color !== 'colors') {
     brushColor = color;
-    button.style.backgroundColor = color;
-    if(color === 'black'){
-      button.style.color = 'white';
-    }else{
-      button.style.color = 'black';
-    }
+    border.style.backgroundColor = color;
   }
 });
 
